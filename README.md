@@ -3,7 +3,7 @@ get.clean.data
 
 Materials from the Getting and Cleaning Data Mooc
 
-# Below is a decription of the R code and an explanation of how it works.
+# Below is a decription of the R code in run_analysis.R and an explanation of how it works.
 # The working directory is set.
 setwd("~/getting-data-mooc")
 
