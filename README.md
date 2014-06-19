@@ -76,25 +76,25 @@ all.data<- rbind(test, train)
 #An independent, tidy data set with the average of each variable for each activity and each subject is created.
 
 # A blank data frame called "sum.subject" is created to store the average values for each subject.
-sum.subject<-as.data.frame(matrix(0, nrow=30, ncol=87))
+sum.subject<-as.data.frame(matrix(0, nrow=30, ncol=88))
 
-# A loop is used to get the average value across all variables for each subject. The output is stored in the "sub.subject" data frame.
+# A loop is used to get the average value across all variables for each subject. The output is stored in the "sub.subject" data frame. Two blank columns are created at the front of the data frame to store the activity and subject information.
 for (i in 2:87){
-  sum.subject[i]<-tapply(all.data[,i], all.data$Subject, mean)
+  sum.subject[i+1]<-tapply(all.data[,i], all.data$Subject, mean)
 }
 # The subject ID is added to the first column of the "sum.subject" data frame.
 sum.subject[1]<-1:30
 
 # A blank data frame called "sum.activity" is created to store the average values for each activity.
-sum.activity<-as.data.frame(matrix(0, nrow=6, ncol=87))
+sum.activity<-as.data.frame(matrix(0, nrow=6, ncol=88))
 
-# A loop is used to get the average value across all variables for each activity type. The output is stored in the "sum.activity" data frame.
+# A loop is used to get the average value across all variables for each activity type. The output is stored in the "sum.activity" data frame. Two blank columns are created at the front of the data frame to store the activity and subject information.
 for (i in 2:87){
-  sum.activity[i]<-tapply(all.data[,i], all.data$Activity, mean)
+  sum.activity[i+1]<-tapply(all.data[,i], all.data$Activity, mean)
 }
 
-# The activity name is added to the first column of the "sum.acivity" data frame.
-sum.activity[1]<-c("Walking", "Walking_Upstairs", "Walking_Downstairs","Sitting", "Standing", "Laying")
+# The activity name is added to the second column of the "sum.acivity" data frame.
+sum.activity[2]<-c("Walking", "Walking_Upstairs", "Walking_Downstairs","Sitting", "Standing", "Laying")
 
 #The sum.subject and sum.activity datasets are combined into one dataset called "sum.data".
 sum.data<-rbind(sum.subject, sum.activity)
@@ -103,10 +103,14 @@ sum.data<-rbind(sum.subject, sum.activity)
 col_names2<-as.character(col_names)
 
 #The column names are added to the "sum.data" data frame.
-colnames(sum.data)[2:87]<-col_names2
+colnames(sum.data)[3:88]<-col_names2
 
-#The first column with the IDs and Activities is labeled.
-colnames(sum.data)[1]<-"Subject-Activity"
+#The first and second columns with the IDs and Activities are labeled.
+colnames(sum.data)[1:2]<-c("Subject", "Activity")
+
+#Any 0 values in the first two columns are converted to NA
+sum.data$Subject[sum.data$Subject==0]<-NA
+sum.data$Activity[sum.data$Activity==0]<-NA
 
 #The dataset is output as a text file.
 write.table(sum.data, "./sumdata.txt", sep="\t")
