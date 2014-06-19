@@ -4,20 +4,20 @@ get.clean.data
 Materials from the Getting and Cleaning Data Mooc
 
 # Below is a decription of the R code and an explanation of how it works.
-# This sets the working directory.
+# The working directory is set.
 setwd("~/getting-data-mooc")
 
-#First we will work with the Training Data
+#Training Data
 
-# Each training files is read into R and saved as a data frame.
+# Each training file is read into R and saved as a data frame.
 subject_train = read.table("./UCI-HAR-Dataset/train/subject_train.txt")
 X_train = read.table("./UCI-HAR-Dataset/train/X_train.txt")
 Y_train = read.table("./UCI-HAR-Dataset/train/Y_train.txt")
 
-#The text file containing the labels is read into R and saved as a data frame.
+#The text file containing the column labels is read into R and saved as a data frame.
 labels = read.table("./UCI-HAR-Dataset/features.txt")
 
-#And index of all labels that contain the text string "mean" is saved in the vector called "means". The text case of the lablels is ignored.
+#An index of all labels that contain the text string "mean" is saved in the vector called "means". The text case of the lablels is ignored.
 means<-grep("mean", labels$V2, ignore.case = TRUE)
 
 #An index of all labels that contain the text string "std" is saved in the vector called "std". The text case of the lables is ignored.
@@ -33,13 +33,13 @@ train_extract<-X_train[,col_index]
 #The index is also used to extract the column names for the mean and std columns and this list of names is saved to the vector "col_names".
 col_names<-labels$V2[col_index]
 
-#The extracted training columns are labeled using the col_names vector.
+#The extracted training columns are assigned column names using the col_names vector.
 names(train_extract)<-col_names
   
-#The subject ID and activity data frames are added to the "train_extract" data frame in a new data frame called "train".
+#The subject ID and activity data frames are added to the "train_extract" data frame and saved in a new data frame called "train".
 train<-cbind(subject_train, train_extract, Y_train)
 
-#The subject ID and activity columns in "train" are labled.
+#The subject ID and activity columns in "train" are labeled.
 colnames(train)[c(1, 88)]<- c("Subject", "Activity")
 
 #The codes for the activities are saved in a vector called "activity.code".
@@ -48,6 +48,7 @@ activity.code<- c("Walking"= 1, "Walking_Upstairs"=2, "Walking_Downstairs"=3, "S
 #A column called "Activity.name" is added to the train data frame and the labels are matched with their corresponding code and added to this column.
 train$Activity.name<- names(activity.code)[match(train$Activity, activity.code)]
 
+#Test
 #The Test dataset is now modified in a simlar manner to the Training data.
 
 # Each test file is read into R and saved as a data frame.
@@ -61,13 +62,13 @@ test_extract<-X_test[,col_index]
 #The extracted test columns are labeled using the col_names vector that was created above.
 names(test_extract)<-col_names
 
-#The subject ID and activity data frames are added to the "test_extract" data frame in a new data frame called "test".
+#The subject ID and activity data frames are added to the "test_extract" data frame and saved in a new data frame called "test".
 test<-cbind(subject_test, test_extract, Y_test)
 
-#The subject ID and activity columns in "test" are labled.
+#The subject ID and activity columns in "test" are labeled.
 colnames(test)[c(1, 88)]<- c("Subject", "Activity")
 
-##A column called "Activity.name" is added to the train data frame and the labels are matched with their corresponding code and added to this column. The vector of codes that was created agove was used.
+#A column called "Activity.name" is added to the train data frame and the labels are matched with their corresponding code and added to this column. The vector of codes that was created agove was used.
 test$Activity.name<- names(activity.code)[match(test$Activity, activity.code)]
 
 #The Test and Train datasets are combined into a dataset called "all.data".
@@ -82,6 +83,7 @@ sum.subject<-as.data.frame(matrix(0, nrow=30, ncol=88))
 for (i in 2:87){
   sum.subject[i+1]<-tapply(all.data[,i], all.data$Subject, mean)
 }
+
 # The subject ID is added to the first column of the "sum.subject" data frame.
 sum.subject[1]<-1:30
 
@@ -99,7 +101,7 @@ sum.activity[2]<-c("Walking", "Walking_Upstairs", "Walking_Downstairs","Sitting"
 #The sum.subject and sum.activity datasets are combined into one dataset called "sum.data".
 sum.data<-rbind(sum.subject, sum.activity)
 
-#The list of column names that was created above are converted into a character vactor.
+#The list of column names that was created above are converted into a character vector.
 col_names2<-as.character(col_names)
 
 #The column names are added to the "sum.data" data frame.
